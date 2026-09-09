@@ -1,0 +1,26 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: auth-service
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/staffsync_auth}
+    username: ${DB_USER:staffsync}
+    password: ${DB_PASS:staffsync}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  security:
+    user:
+      name: ignored  # we handle security ourselves
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://admin:admin@localhost:8761/eureka/}
+
+jwt:
+  secret: ${JWT_SECRET:devSecretKeyAtLeast32CharactersLong!!}
+  expiration-ms: 86400000
