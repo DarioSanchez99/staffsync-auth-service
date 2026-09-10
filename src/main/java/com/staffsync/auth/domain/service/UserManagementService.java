@@ -28,6 +28,15 @@ public class UserManagementService implements UserManagementUseCase {
         if (userRepository.existsByEmail(command.email())) {
             throw new IllegalStateException("Email already registered: " + command.email());
         }
+        if (command.password() == null || command.password().length() < 8) {
+            throw new IllegalArgumentException("Password must be at least 8 characters");
+        }
+        if (!command.password().matches(".*[A-Z].*")) {
+            throw new IllegalArgumentException("Password must contain at least one uppercase letter");
+        }
+        if (!command.password().matches(".*[0-9].*")) {
+            throw new IllegalArgumentException("Password must contain at least one number");
+        }
 
         Role role = null;
         if (command.roleId() != null) {
