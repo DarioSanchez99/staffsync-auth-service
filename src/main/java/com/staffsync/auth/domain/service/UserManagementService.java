@@ -73,6 +73,20 @@ public class UserManagementService implements UserManagementUseCase {
     }
 
     @Override
+    public void changePassword(UUID userId, String currentPassword, String newPassword) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
+        if (!passwordEncoder.matches(currentPassword, user.passwordHash())) {
+            throw new IllegalArgumentException("Current password is incorrect");
+        }
+        if (newPassword == null || newPassword.length() < 8) {
+            throw new IllegalArgumentException("New password must be at least 8 characters");
+        }
+        User updated = new User(user.id(), user.email(), passwordEncoder.encode(newPassword), user.name(), user.role(), user.createdAt());
+        userRepository.save(updated);
+    }
+
+    @Override
     public User assignRole(UUID userId, UUID roleId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));

@@ -7,10 +7,14 @@ import com.staffsync.auth.generated.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -54,6 +58,14 @@ public class AuthController implements AuthApi {
     public ResponseEntity<UserResponse> getCurrentUser(UUID xUserId) {
         com.staffsync.auth.domain.model.User user = userManagementUseCase.findById(xUserId);
         return ResponseEntity.ok(toUserResponse(user));
+    }
+
+    @PutMapping("/auth/change-password")
+    public ResponseEntity<Void> changePassword(
+            @RequestHeader("X-User-Id") UUID userId,
+            @RequestBody Map<String, String> body) {
+        userManagementUseCase.changePassword(userId, body.get("currentPassword"), body.get("newPassword"));
+        return ResponseEntity.noContent().build();
     }
 
     private UserResponse toUserResponse(com.staffsync.auth.domain.model.User user) {

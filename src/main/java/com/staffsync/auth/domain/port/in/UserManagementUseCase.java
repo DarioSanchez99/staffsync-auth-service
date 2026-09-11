@@ -18,4 +18,6 @@ public interface UserManagementUseCase {
     List<User> listAll();
 
     User assignRole(UUID userId, UUID roleId);
+
+    void changePassword(UUID userId, String currentPassword, String newPassword);
 }
