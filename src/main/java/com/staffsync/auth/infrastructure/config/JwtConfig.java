@@ -43,6 +43,7 @@ public class JwtConfig implements TokenPort {
                 .claim("role", role)
                 .claim("permissions", permissions)
                 .claim("email", user.email())
+                .claim("name", user.name())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expirationMs))
                 .signWith(secretKey)
